@@ -2,10 +2,16 @@
 #include <stdio.h>
 
 int add(int x, int y) {
-	printf("%s\n", "success");
 	return x + y;
 }
 
 int square(int x) {
 	return x * x;
+}
+
+int sum(int * arr) {
+	int sum = 0;
+	arr++;
+	sum += *arr;
+	return sum;
 }
