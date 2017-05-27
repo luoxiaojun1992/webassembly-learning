@@ -26,6 +26,10 @@ private:
   std::string y;
 };
 
+float add(float a, float b, float c) {
+	return a + b + c;
+}
+
 // Binding code
 EMSCRIPTEN_BINDINGS(my_class_example) {
   class_<MyClass>("MyClass")
@@ -34,4 +38,5 @@ EMSCRIPTEN_BINDINGS(my_class_example) {
     .property("x", &MyClass::getX, &MyClass::setX)
     .class_function("getStringFromInstance", &MyClass::getStringFromInstance)
     ;
+	function("add", &add);
 }
