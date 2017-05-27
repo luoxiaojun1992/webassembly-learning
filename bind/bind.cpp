@@ -30,6 +30,14 @@ float add(float a, float b, float c) {
 	return a + b + c;
 }
 
+int sum(std::string arr, int len) {
+  int sum = 0;
+  for (int i = 0; i < len; ++i) {
+    sum += arr[i];
+  }
+  return sum;
+}
+
 // Binding code
 EMSCRIPTEN_BINDINGS(my_class_example) {
   class_<MyClass>("MyClass")
@@ -39,4 +47,5 @@ EMSCRIPTEN_BINDINGS(my_class_example) {
     .class_function("getStringFromInstance", &MyClass::getStringFromInstance)
     ;
 	function("add", &add);
+  function("sum", &sum);
 }
