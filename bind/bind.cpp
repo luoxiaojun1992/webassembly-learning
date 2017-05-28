@@ -36,23 +36,35 @@ int sum(std::string arr, int len) {
     sum += arr[i];
   }
 
-  std::sort(std::begin(arr), std::end(arr));
-
   return sum;
 }
 
-std::string sort(std::string arr, int len) {
-  int tmp = 0;
-  for (int i = 0; i < len; ++i) {
-    for (int j = i + 1; j < len; j++) {
-      if (arr[j] < arr[i]) {
-        tmp = arr[j];
-        arr[j] = arr[i];
-        arr[i] = tmp;
+int max(std::string arr, int len) {
+  int max = 0;
+  if (len > 1) {
+    max = arr[0];
+    for (int i = 1; i < len; ++i) {
+      if (arr[i] > max) {
+        max = arr[i];
       }
     }
   }
-  return arr;
+
+  return max;
+}
+
+int min(std::string arr, int len) {
+  int min = 0;
+  if (len > 1) {
+    min = arr[0];
+    for (int i = 1; i < len; ++i) {
+      if (arr[i] < min) {
+        min = arr[i];
+      }
+    }
+  }
+
+  return min;
 }
 
 // Binding code
@@ -65,5 +77,6 @@ EMSCRIPTEN_BINDINGS(my_class_example) {
     ;
 	function("add", &add);
   function("sum", &sum);
-  function("sort", &sort);
+  function("max", &max);
+  function("min", &min);
 }
