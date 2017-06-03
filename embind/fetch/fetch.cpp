@@ -27,10 +27,6 @@ int main() {
   emscripten_fetch(&attr, "http://dev.sf.dev:8080/webassembly/math.html");
 }
 
-std::string test() {
-  return "test";
-}
-
 // Binding code
 EMSCRIPTEN_BINDINGS(my_class_example) {
 }
