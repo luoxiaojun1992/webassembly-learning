@@ -1,23 +1,30 @@
-#include <emscripten/emscripten.h>
 #include <emscripten/bind.h>
 #include <emscripten/fetch.h>
+#include <stdio.h>
 #include <string>
 
 using namespace emscripten;
 
-std::string httpGet() {
+void downloadSucceeded(emscripten_fetch_t *fetch) {
+  printf("Finished downloading %llu bytes from URL %s.\n", fetch->numBytes, fetch->url);
+  printf(fetch->data);
+  // The data is now available at fetch->data[0] through fetch->data[fetch->numBytes-1];
+  emscripten_fetch_close(fetch); // Free data associated with the fetch.
+}
+
+void downloadFailed(emscripten_fetch_t *fetch) {
+  printf("Downloading %s failed, HTTP failure status code: %d.\n", fetch->url, fetch->status);
+  emscripten_fetch_close(fetch); // Also free data on failure.
+}
+
+int main() {
   emscripten_fetch_attr_t attr;
   emscripten_fetch_attr_init(&attr);
   strcpy(attr.requestMethod, "GET");
-  attr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY | EMSCRIPTEN_FETCH_SYNCHRONOUS;
-  emscripten_fetch_t *fetch = emscripten_fetch(&attr, "http://www.qianshengqian.com/"); // Blocks here until the operation is complete.
-  emscripten_fetch_close(fetch);
-  if (fetch->status == 200) {
-    // The data is now available at fetch->data[0] through fetch->data[fetch->numBytes-1];
-    return (std::string)fetch->data;
-  } else {
-    return "";
-  }
+  attr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY;
+  attr.onsuccess = downloadSucceeded;
+  attr.onerror = downloadFailed;
+  emscripten_fetch(&attr, "http://dev.sf.dev:8080/webassembly/math.html");
 }
 
 std::string test() {
@@ -26,6 +33,4 @@ std::string test() {
 
 // Binding code
 EMSCRIPTEN_BINDINGS(my_class_example) {
-  function("httpGet", &httpGet);
-  function("test", &test);
 }
