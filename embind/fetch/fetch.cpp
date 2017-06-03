@@ -1,5 +1,6 @@
 #include <emscripten/bind.h>
 #include <emscripten/fetch.h>
+#include <emscripten/val.h>
 #include <stdio.h>
 #include <string>
 
@@ -7,7 +8,11 @@ using namespace emscripten;
 
 void downloadSucceeded(emscripten_fetch_t *fetch) {
   printf("Finished downloading %llu bytes from URL %s.\n", fetch->numBytes, fetch->url);
-  printf(fetch->data);
+  val window = val::global("window");
+  window.set("fetchContent", val(fetch->data));
+  // val oscillator = context.call<val>("createOscillator");
+  // oscillator.call<void>("connect", context["destination"]);
+
   // The data is now available at fetch->data[0] through fetch->data[fetch->numBytes-1];
   emscripten_fetch_close(fetch); // Free data associated with the fetch.
 }
